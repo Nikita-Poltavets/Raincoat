@@ -11,7 +11,10 @@
 </template>
 
 <script>
-import AdvertsList from "components/adverts/AdvertList.vue";
+import AdvertsList from 'components/adverts/AdvertList.vue'
+import { addHandler } from 'util/ws'
+import { getIndex } from 'util/collections'
+
 
 export default {
     components: {
@@ -22,6 +25,16 @@ export default {
             adverts: frontendData.adverts,
             profile: frontendData.profile
         }
+    },
+    created() {
+        addHandler(data => {
+            let index = getIndex(this.adverts, data.id)
+            if(index > -1){
+                this.adverts.splice(index, 1, data)
+            } else {
+                this.adverts.push(data)
+            }
+        })
     }
 }
 </script>

@@ -5,6 +5,8 @@ import nix.finalproject.raincoat.domain.Advert;
 import nix.finalproject.raincoat.domain.Views;
 import nix.finalproject.raincoat.repository.AdvertRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -50,5 +52,11 @@ public class AdvertController {
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Advert advert) {
        advertRepository.delete(advert);
+    }
+
+    @MessageMapping("/changeAdvert")
+    @SendTo("/topic/activity")
+    public Advert change(Advert advert){
+        return advertRepository.save(advert);
     }
 }
