@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { sendMessage } from 'util/ws'
+import advertApi from 'api/adverts'
 
 export default {
     props: ['adverts', 'advertAttr'],
@@ -30,38 +30,41 @@ export default {
     },
     methods: {
         save() {
-            sendMessage({id: this.id, title: this.title, details: this.details, description: this.description})
 
+
+            const advert = {
+                id: this.id,
+                title: this.title,
+                details: this.details,
+                description: this.description
+            }
+
+            if(this.id){
+                advertApi.update(advert).then(result =>
+                        result.json().then(data => {
+                            const index = this.adverts.findIndex(item => item.id === data.id)
+                            this.adverts.splice(index, 1, data)
+
+                        })
+                )
+            } else {
+                advertApi.add(advert).then(result =>
+                        result.json().then(data => {
+
+                            const index = this.adverts.findIndex(item => item.id === data.id)
+
+                            if(index > -1){
+                                this.adverts.splice(index, 1, data)
+                            } else {
+                                this.adverts.push(data)
+                            }
+                        })
+                )
+            }
             this.title = ''
             this.details = ''
             this.description = ''
             this.id = ''
-
-            // const advert = { title: this.title, details: this.details, description: this.description}
-            //
-            // if(this.id){
-            //     advertApi.update({id: this.id}, advert).then(result =>
-            //             result.json().then(data => {
-            //                 const index = getIndex(this.adverts, data.id)
-            //                 this.adverts.splice(index, 1, data)
-            //
-            //                 this.title = ''
-            //                 this.details = ''
-            //                 this.description = ''
-            //                 this.id = ''
-            //             })
-            //     )
-            // } else {
-            //     this.$resource('/advert{/id}').save({}, advert).then(result =>
-            //             result.json().then(data => {
-            //                 this.adverts.push(data)
-            //
-            //                 this.title = ''
-            //                 this.details = ''
-            //                 this.description = ''
-            //             })
-            //     )
-            // }
         }
     }
 }

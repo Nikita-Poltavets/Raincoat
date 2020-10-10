@@ -3,22 +3,26 @@ package nix.finalproject.raincoat.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import nix.finalproject.raincoat.domain.Advert;
 import nix.finalproject.raincoat.domain.Views;
+import nix.finalproject.raincoat.dto.EventType;
+import nix.finalproject.raincoat.dto.ObjectType;
 import nix.finalproject.raincoat.repository.AdvertRepository;
+import nix.finalproject.raincoat.util.WsSender;
 import org.springframework.beans.BeanUtils;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @RestController
 @RequestMapping("advert")
 public class AdvertController {
    private final AdvertRepository advertRepository;
+   private final BiConsumer<EventType, Advert> wsSender;
 
-    public AdvertController(AdvertRepository advertRepository) {
+    public AdvertController(AdvertRepository advertRepository, WsSender wsSender) {
         this.advertRepository = advertRepository;
+        this.wsSender = wsSender.getSender(ObjectType.ADVERT, Views.IdTitleDetailsDescription.class);
     }
 
     @GetMapping
@@ -36,7 +40,11 @@ public class AdvertController {
     @PostMapping
     public Advert create(@RequestBody Advert advert) {
         advert.setCreationDate(LocalDateTime.now());
-        return advertRepository.save(advert);
+        Advert createdAdvert = advertRepository.save(advert);
+
+        wsSender.accept(EventType.CREATE, createdAdvert);
+
+        return createdAdvert;
     }
 
     @PutMapping("{id}")
@@ -46,17 +54,16 @@ public class AdvertController {
     ) {
         BeanUtils.copyProperties(advert, advertFromDb, "id");
 
-        return advertRepository.save(advertFromDb);
+        Advert updatedAdvert = advertRepository.save(advertFromDb);
+
+        wsSender.accept(EventType.UPDATE, updatedAdvert);
+
+        return updatedAdvert;
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Advert advert) {
        advertRepository.delete(advert);
-    }
-
-    @MessageMapping("/changeAdvert")
-    @SendTo("/topic/activity")
-    public Advert change(Advert advert){
-        return advertRepository.save(advert);
+       wsSender.accept(EventType.REMOVE, advert);
     }
 }

@@ -24,7 +24,6 @@
 <script>
 import AdvertsList from 'components/adverts/AdvertList.vue'
 import { addHandler } from 'util/ws'
-import { getIndex } from 'util/collections'
 
 
 export default {
@@ -39,11 +38,25 @@ export default {
     },
     created() {
         addHandler(data => {
-            let index = getIndex(this.adverts, data.id)
-            if(index > -1){
-                this.adverts.splice(index, 1, data)
+            if(data.objectType === 'ADVERT') {
+                const index = this.adverts.findIndex(item => item.id === data.body.id)
+                switch (data.eventType){
+                    case 'CREATE':
+                    case 'UPDATE':
+                        if(index > -1){
+                            this.adverts.splice(index, 1, data.body)
+                        } else {
+                            this.adverts.push(data.body)
+                        }
+                        break
+                    case 'REMOVE':
+                        this.adverts.splice(index, 1)
+                        break
+                    default:
+                        console.error(`"${data.eventTyp}" event type is unknown`)
+                }
             } else {
-                this.adverts.push(data)
+                console.error(`"${data.eventTyp}" object type is unknown`)
             }
         })
     }

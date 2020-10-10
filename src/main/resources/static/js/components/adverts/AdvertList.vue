@@ -13,8 +13,9 @@
 
 <script>
 
-import AdvertRow from "components/adverts/AdvertRow.vue"
-import AdvertForm from "components/adverts/AdvertForm.vue"
+import AdvertRow from 'components/adverts/AdvertRow.vue'
+import AdvertForm from 'components/adverts/AdvertForm.vue'
+import advertApi from 'api/adverts'
 
 export default {
     props: ['adverts'],
@@ -37,7 +38,7 @@ export default {
             this.advert = advert
         },
         deleteAdvert(advert) {
-            this.$resource('/advert{/id}').remove({id: advert.id}).then(result => {
+            advertApi.remove(advert.id).then(result => {
                 if (result.ok) {
                     this.adverts.splice(this.adverts.indexOf(this.advert), 1)
                 }
