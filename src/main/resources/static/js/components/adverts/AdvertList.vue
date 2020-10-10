@@ -1,14 +1,14 @@
 <template>
-    <div style="position: relative; width: 300px;">
+    <v-layout align-content-space-around justify-start column>
         <advert-form :adverts="adverts" :advertAttr="advert"/>
-        <advert-row v-for="advert in adverts"
+        <advert-row v-for="advert in sortedAdverts"
                     :key="advert.id"
                     :advert="advert"
                     :editAdvert="editAdvert"
                     :deleteAdvert="deleteAdvert"
                     :adverts="adverts"/>
 
-    </div>
+    </v-layout>
 </template>
 
 <script>
@@ -25,6 +25,11 @@ export default {
     data() {
         return {
             advert: null
+        }
+    },
+    computed: {
+        sortedAdverts(){
+            return this.adverts.sort((a, b) => -(a.id - b.id))
         }
     },
     methods: {

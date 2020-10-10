@@ -1,12 +1,17 @@
 <template>
-    <div>
-    <i>({{ advert.id }}) </i>{{ advert.title }}
-     {{ advert.details }} {{ advert.description }}
-    <span style="position: absolute; right: 0">
-               <input type="button" value="Edit" @click="edit" />
-               <input type="button" value="X" @click="del" />
-           </span>
-    </div>
+    <v-card class="my-2 mx-16">
+        <v-card-title>
+            <i>({{ advert.id }}) </i>
+            {{ advert.title }}
+        </v-card-title>
+        {{ advert.details }} {{ advert.description }}
+        <v-card-actions>
+            <v-btn value="Edit" @click="edit">Edit</v-btn>
+            <v-btn depressed color="error" @click="del">
+                Delete
+            </v-btn>
+        </v-card-actions>
+    </v-card>
 </template>
 
 <script>
@@ -24,6 +29,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>

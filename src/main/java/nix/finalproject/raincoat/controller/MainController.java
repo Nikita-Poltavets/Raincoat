@@ -28,8 +28,11 @@ public class MainController {
 
         HashMap<Object, Object> data = new HashMap<>();
 
-        data.put("profile", user);
-        data.put("adverts", advertRepository.findAll());
+
+        if(user != null) {
+            data.put("profile", user);
+            data.put("adverts", advertRepository.findAll());
+        }
 
         model.addAttribute("frontendData", data);
         model.addAttribute("isDevMode", "dev".equals(profile));
