@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import advertApi from 'api/adverts'
+import { mapActions } from 'vuex'
 
 export default {
-    props: ['adverts', 'advertAttr'],
+    props: ['advertAttr'],
     data() {
         return {
             title: '',
@@ -29,9 +29,8 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['addAdvertAction' ,'updateAdvertAction']),
         save() {
-
-
             const advert = {
                 id: this.id,
                 title: this.title,
@@ -40,26 +39,9 @@ export default {
             }
 
             if(this.id){
-                advertApi.update(advert).then(result =>
-                        result.json().then(data => {
-                            const index = this.adverts.findIndex(item => item.id === data.id)
-                            this.adverts.splice(index, 1, data)
-
-                        })
-                )
+                this.updateAdvertAction(advert)
             } else {
-                advertApi.add(advert).then(result =>
-                        result.json().then(data => {
-
-                            const index = this.adverts.findIndex(item => item.id === data.id)
-
-                            if(index > -1){
-                                this.adverts.splice(index, 1, data)
-                            } else {
-                                this.adverts.push(data)
-                            }
-                        })
-                )
+                this.addAdvertAction(advert)
             }
             this.title = ''
             this.details = ''

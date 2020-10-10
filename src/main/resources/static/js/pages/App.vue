@@ -13,7 +13,7 @@
                 <a href="/login"> Google</a>
             </v-container>
             <v-container v-if="profile">
-                <adverts-list :adverts="adverts"/>
+                <adverts-list />
             </v-container>
         </v-main>
 
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 import AdvertsList from 'components/adverts/AdvertList.vue'
 import { addHandler } from 'util/ws'
 
@@ -30,33 +31,26 @@ export default {
     components: {
         AdvertsList
     },
-    data() {
-        return{
-            adverts: frontendData.adverts,
-            profile: frontendData.profile
-        }
-    },
+    computed: mapState(['profile']),
+    methods: mapMutations(['addAdvertMutation', 'updateAdvertMutation', 'removeAdvertMutation']),
     created() {
         addHandler(data => {
             if(data.objectType === 'ADVERT') {
-                const index = this.adverts.findIndex(item => item.id === data.body.id)
                 switch (data.eventType){
                     case 'CREATE':
+                        this.addAdvertMutation(data.body)
+                        break
                     case 'UPDATE':
-                        if(index > -1){
-                            this.adverts.splice(index, 1, data.body)
-                        } else {
-                            this.adverts.push(data.body)
-                        }
+                        this.updateAdvertMutation(data.body)
                         break
                     case 'REMOVE':
-                        this.adverts.splice(index, 1)
+                        this.removeAdvertMutation(data.body)
                         break
                     default:
-                        console.error(`"${data.eventTyp}" event type is unknown`)
+                        console.error(`"${data.eventType}" event type is unknown`)
                 }
             } else {
-                console.error(`"${data.eventTyp}" object type is unknown`)
+                console.error(`"${data.eventType}" object type is unknown`)
             }
         })
     }

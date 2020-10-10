@@ -15,15 +15,18 @@
 </template>
 
 <script>
-export default {
-    props: ['advert', 'editAdvert', 'deleteAdvert', 'adverts'],
 
+import { mapActions } from 'vuex'
+
+export default {
+    props: ['advert', 'editAdvert'],
     methods: {
+        ...mapActions(['removeAdvertAction']),
         edit(){
             this.editAdvert(this.advert)
         },
         del(){
-            this.deleteAdvert(this.advert)
+            this.removeAdvertAction(this.advert)
         }
     }
 }
