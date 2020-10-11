@@ -2,19 +2,26 @@
     <v-app>
         <v-app-bar app>
             <v-toolbar-title>Raincoat</v-toolbar-title>
+            <v-btn class="ml-3"
+                   flat
+                   v-if="profile"
+                   :disabled="$route.path === '/'"
+                   @click="showAdverts">
+                All Adverts
+            </v-btn>
             <v-spacer></v-spacer>
-            <span v-if="profile">{{ profile.name }}</span>
+            <v-btn flat
+                   v-if="profile"
+                   :disabled="$route.path === '/profile'"
+                   @click="showProfile">
+                {{ profile.name }}
+            </v-btn>
             <v-btn v-if="profile" icon href="/logout">
                 <v-icon>exit_to_app</v-icon>
             </v-btn>
         </v-app-bar>
         <v-main>
-            <v-container v-if="!profile">Необходимо авторизоваться через
-                <a href="/login"> Google</a>
-            </v-container>
-            <v-container v-if="profile">
-                <adverts-list />
-            </v-container>
+            <router-view></router-view>
         </v-main>
 
 
@@ -23,16 +30,21 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import AdvertsList from 'components/adverts/AdvertList.vue'
 import { addHandler } from 'util/ws'
 
 
 export default {
-    components: {
-        AdvertsList
-    },
     computed: mapState(['profile']),
-    methods: mapMutations(['addAdvertMutation', 'updateAdvertMutation', 'removeAdvertMutation']),
+    methods: {
+        ...mapMutations(['addAdvertMutation', 'updateAdvertMutation', 'removeAdvertMutation']),
+        showAdverts(){
+            this.$router.push('/')
+        },
+        showProfile(){
+            this.$router.push('/profile')
+        }
+    },
+
     created() {
         addHandler(data => {
             if(data.objectType === 'ADVERT') {
@@ -53,6 +65,11 @@ export default {
                 console.error(`"${data.eventType}" object type is unknown`)
             }
         })
+    },
+    beforeMount() {
+        if(!this.profile){
+            this.$router.replace('/auth')
+        }
     }
 }
 </script>

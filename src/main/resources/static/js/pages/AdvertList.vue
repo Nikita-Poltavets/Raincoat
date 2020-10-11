@@ -1,16 +1,18 @@
 <template>
-    <v-layout align-content-space-around justify-start column>
-        <advert-form :advertAttr="advert"/>
-        <advert-row v-for="advert in sortedAdverts"
-                    :key="advert.id"
-                    :advert="advert"
-                    :editAdvert="editAdvert"/>
+    <v-container>
+        <v-layout align-content-space-around justify-start column>
+            <advert-form :advertAttr="advert"/>
+            <advert-row v-for="advert in sortedAdverts"
+                        :key="advert.id"
+                        :advert="advert"
+                        :editAdvert="editAdvert"/>
 
-    </v-layout>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import AdvertRow from 'components/adverts/AdvertRow.vue'
 import AdvertForm from 'components/adverts/AdvertForm.vue'
 
