@@ -21,11 +21,12 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "advert_id")
+    @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     private Advert advert;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    @JsonView(Views.FullAdvert.class)
+    @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     private User author;
 
 }

@@ -44,6 +44,8 @@ public class MainController {
 
             String adverts = writer.writeValueAsString(advertRepository.findAll());
             model.addAttribute("adverts", adverts);
+        } else {
+            model.addAttribute("adverts", "[]");
         }
 
         model.addAttribute("frontendData", data);

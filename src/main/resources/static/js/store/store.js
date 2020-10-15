@@ -44,19 +44,20 @@ export default new Vuex.Store({
             const updateIndex = state.adverts.findIndex(item => item.id === comment.advert.id)
             const advert = state.adverts[updateIndex]
 
-            state.adverts = [
-                ...state.adverts.slice(0, updateIndex),
-                {
-                    ...advert,
-                    comments: [
-                        ...advert.comments,
-                        comment
-                    ]
+            if(!advert.comments.find(it => it.id === comment.id)) {
+                state.adverts = [
+                    ...state.adverts.slice(0, updateIndex),
+                    {
+                        ...advert,
+                        comments: [
+                            ...advert.comments,
+                            comment
+                        ]
 
-                },
-                ...state.adverts.slice(updateIndex + 1)
-            ]
-
+                    },
+                    ...state.adverts.slice(updateIndex + 1)
+                ]
+            }
         },
     },
     actions: {
@@ -88,7 +89,7 @@ export default new Vuex.Store({
             const response = await commentApi.add(comment) //Отправляем на сервер наш коммент.
             const data = await response.json() //Получаем данные, которые пришли с сервера
 
-            commit('addCommentMutation', comment) //Отправляем вышенаписанное в мутацию
+            commit('addCommentMutation', data) //Отправляем вышенаписанное в мутацию
         }
     }
 })
