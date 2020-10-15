@@ -4,7 +4,7 @@ public final class Views {
 
     public interface Id {}
 
-    public interface IdTitleDetailsDescription extends Id {}
+    public interface IdTitleDetailsDescriptionJob extends Id {}
 
     public interface FullAdvert extends Id {}
 }

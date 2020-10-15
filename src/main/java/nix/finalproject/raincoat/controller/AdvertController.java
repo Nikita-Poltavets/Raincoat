@@ -22,11 +22,11 @@ public class AdvertController {
 
     public AdvertController(AdvertRepository advertRepository, WsSender wsSender) {
         this.advertRepository = advertRepository;
-        this.wsSender = wsSender.getSender(ObjectType.ADVERT, Views.IdTitleDetailsDescription.class);
+        this.wsSender = wsSender.getSender(ObjectType.ADVERT, Views.IdTitleDetailsDescriptionJob.class);
     }
 
     @GetMapping
-    @JsonView(Views.IdTitleDetailsDescription.class)
+    @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     public List<Advert> list(){
         return advertRepository.findAll();
     }
