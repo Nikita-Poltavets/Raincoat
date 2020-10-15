@@ -1,6 +1,7 @@
 package nix.finalproject.raincoat.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -14,8 +15,11 @@ import java.time.LocalDateTime;
 @Data
 public class User implements Serializable {
     @Id
+    @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     private String id;
+    @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     private String name;
+    @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     private String userpic;
     private String email;
     private String gender;

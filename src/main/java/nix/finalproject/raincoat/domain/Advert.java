@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table
@@ -32,4 +33,13 @@ public class Advert {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonView(Views.FullAdvert.class)
     private LocalDateTime creationDate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonView(Views.FullAdvert.class)
+    private User author;
+
+    @OneToMany(mappedBy = "advert", orphanRemoval = true)
+    @JsonView(Views.FullAdvert.class)
+    private List<Comment> comments;
 }

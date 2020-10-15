@@ -2,12 +2,14 @@ package nix.finalproject.raincoat.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import nix.finalproject.raincoat.domain.Advert;
+import nix.finalproject.raincoat.domain.User;
 import nix.finalproject.raincoat.domain.Views;
 import nix.finalproject.raincoat.dto.EventType;
 import nix.finalproject.raincoat.dto.ObjectType;
 import nix.finalproject.raincoat.repository.AdvertRepository;
 import nix.finalproject.raincoat.util.WsSender;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -38,10 +40,14 @@ public class AdvertController {
     }
 
     @PostMapping
-    public Advert create(@RequestBody Advert advert) {
+    public Advert create(
+            @RequestBody Advert advert,
+            @AuthenticationPrincipal User user
+    ) {
         advert.setCreationDate(LocalDateTime.now());
-        Advert createdAdvert = advertRepository.save(advert);
+        advert.setAuthor(user);
 
+        Advert createdAdvert = advertRepository.save(advert);
         wsSender.accept(EventType.CREATE, createdAdvert);
 
         return createdAdvert;
