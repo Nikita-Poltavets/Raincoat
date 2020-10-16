@@ -99,7 +99,7 @@ export default {
             description: '',
             details: '',
             job: '',
-            id: '',
+            id: null,
             items: ['Offer', 'Looking for']
         }
     },
@@ -133,13 +133,15 @@ export default {
             this.details = ''
             this.description = ''
             this.job = ''
-            this.id = ''
+            this.id = null
         },
         setVariableJob(job) {
             if (job === 'Offer') {
                 job = false
+                return job
             } else {
                 job = true
+                return job
             }
         }
     }

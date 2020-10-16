@@ -7,8 +7,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        adverts: adverts,
-        profile: frontendData.profile
+        adverts,
+        ...frontendData
     },
     getters: {
         sortedAdverts: state => (state.adverts || []).sort((a, b) => -(a.id - b.id))
@@ -59,6 +59,22 @@ export default new Vuex.Store({
                 ]
             }
         },
+        addAdvertPageMutation(state, adverts){
+            const targetAdverts = state.adverts
+                .concat(adverts)
+                .reduce((res, val) => { // Делаем map, чтобы избавиться от дубликатов
+                    res[val.id] = val
+                    return res
+                }, {})
+
+            state.adverts = Object.values(targetAdverts)
+        },
+        updateTotalPagesMutation(state, totalPages){
+            state.totalPages = totalPages;
+        },
+        updateCurrentPageMutation(state, currentPage){
+            state.currentPage = currentPage;
+        },
     },
     actions: {
         async addAdvertAction({commit, state}, advert){
@@ -90,6 +106,14 @@ export default new Vuex.Store({
             const data = await response.json() //Получаем данные, которые пришли с сервера
 
             commit('addCommentMutation', data) //Отправляем вышенаписанное в мутацию
-        }
+        },
+        async loadPageAction({commit, state}){
+            const response = await advertApi.page(state.currentPage + 1)
+            const data = await response.json()
+
+            commit('addAdvertPageMutation', data.adverts)
+            commit('updateTotalPagesMutation', data.totalPages)
+            commit('updateCurrentPageMutation', Math.min(data.currentPage, data.totalPages - 1))
+        },
     }
 })

@@ -26,6 +26,7 @@
                         :advert="advert"
                         :editAdvert="editAdvert"
             />
+            <lazy-loader></lazy-loader>
 
         </v-layout>
     </v-container>
@@ -35,10 +36,12 @@
 import { mapGetters } from 'vuex'
 import AdvertRow from 'components/adverts/AdvertRow.vue'
 import store from 'store/store';
+import LazyLoader from 'components/adverts/LazyLoader.vue';
 
 
 export default {
     components: {
+        LazyLoader,
         AdvertRow
     },
     data() {
