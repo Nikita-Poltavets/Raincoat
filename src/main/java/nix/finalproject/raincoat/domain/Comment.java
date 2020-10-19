@@ -21,7 +21,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "advert_id")
-    @JsonView(Views.IdTitleDetailsDescriptionJob.class)
+    @JsonView(Views.FullComment.class)
     private Advert advert;
 
     @ManyToOne

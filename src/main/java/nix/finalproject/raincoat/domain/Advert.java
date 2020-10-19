@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,12 +27,20 @@ public class Advert {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(Views.Id.class)
     private Long id;
+
+
     @JsonView(Views.IdTitleDetailsDescriptionJob.class)
+    @NotBlank(message = "Title is mandatory")
     private String title;
+
+    @NotBlank(message = "Details is mandatory")
     @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     private String details;
+
+    @NotBlank(message = "Description is mandatory")
     @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     private String description;
+
     @JsonView(Views.IdTitleDetailsDescriptionJob.class)
     private boolean job;
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import nix.finalproject.raincoat.domain.Comment;
 import nix.finalproject.raincoat.domain.User;
 import nix.finalproject.raincoat.domain.Views;
-import nix.finalproject.raincoat.service.CommentService;
+import nix.finalproject.raincoat.service.impl.CommentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
