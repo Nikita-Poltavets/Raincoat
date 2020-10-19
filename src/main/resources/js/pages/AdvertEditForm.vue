@@ -191,7 +191,7 @@ export default {
             this.$forceUpdate()
         },
         save() {
-            if(!this.$refs.observer.validate()) {
+            if(this.$refs.observer.validate()) {
 
                 const advert = {
                     id: this.id,
